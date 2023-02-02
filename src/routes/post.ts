@@ -84,6 +84,7 @@ postRouter.post(
   }
 );
 
+/** 以下のコードを真似した */
 postRouter.get(
   "/:postId/edit",
   ensureAuthUser,

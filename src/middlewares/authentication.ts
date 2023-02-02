@@ -81,6 +81,7 @@ export const forbidAuthUser: RequestHandler = (req, res, next) => {
   }
 };
 
+// 以下にログインを知らせるエラーのコードあり
 export const ensureAuthUser: RequestHandler = (req, res, next) => {
   if (req.authentication?.hasSignedin) {
     next();

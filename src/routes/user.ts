@@ -76,26 +76,31 @@ userRouter.get("/:userId", ensureAuthUser, async (req, res, next) => {
 });
 
 /** A page to list all tweets liked by a user */
-userRouter.get("/:userId/likes", async (req, res, next) => {
-  const {userId} = req.params;
-  const user = await User.find(Number(userId));
-  if (!user) return next(new Error("Invalid error: The user is undefined."));
-  const posts = await user.likedPosts();
-  const postsWithUser = await Promise.all(
-    posts.map(async post => {
-      const user = await post.user();
-      return {
-        ...post,
-        user,
-      };
-    })
-  );
-  res.render("users/show", {
-    user,
-    posts: postsWithUser,
-    activeTab: "likes",
-  });
-});
+userRouter.get(
+  "/:userId/likes",
+  ensureAuthUser, //<---------追加
+  async (req, res, next) => {
+    const {userId} = req.params;
+    const user = await User.find(Number(userId));
+    if (!user) return next(new Error("Invalid error: The user is undefined."));
+    const posts = await user.likedPosts();
+    const postsWithUser = await Promise.all(
+      posts.map(async post => {
+        const user = await post.user();
+        return {
+          ...post,
+          user,
+        };
+      })
+    );
+    res.render("users/show", {
+      user,
+      posts: postsWithUser,
+      activeTab: "likes",
+      errors: [], //<---------追加
+    });
+  }
+);
 
 /** A page to edit a user */
 userRouter.get(
